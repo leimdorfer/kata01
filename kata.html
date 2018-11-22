@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta charset="utf-8"/>
+    </head>
+
+    <body>
+        <script type="text/javascript">
+
+        function init(){
+            triangle = [
+                [2],
+                [3,4],
+                [6,5,7],
+                [4,1,8,3]
+                ]
+
+            triangle1 = [
+                [1],
+                [4,3],
+                [8,2,6],
+                [2,3,9,7]
+                ]
+
+            triangle2 = [
+                [3],
+                [6,4],
+                [3,4,7],
+                [3,8,3,6]
+                ]
+
+            triangle3 = [
+                [2],
+                [9,6],
+                [4,5,8],
+                [1,2,3,6]
+                ]
+
+            triangle5 = [
+                [2], 
+                [3,4], 
+                [6,5,7], 
+                [4,1,2,3], 
+                [4,2,8,1,2],
+                [5,4,8,7,3,2]
+                ]
+
+            triangle6 = [
+                [2], 
+                [3, 4], 
+                [6, 5, 7], 
+                [4, 1, 2, 3], 
+                [4, 2, 2, 1, 2], 
+                [5, 4, 8, 4, 3, 2], 
+                [6, 5, 9, 1, 4, 3, 2]
+                ]
+            
+            t = triangle;
+            l = t.length // how many rows in the triangle
+
+            generate_paths();
+
+        }
+
+        function generate_paths(){ // t is your triangle
+            
+            paths=[]; // empty array will contain paths of adjacency through triangle
+            paths.push([0]); // paths now has an array at 0 with a 0
+
+            for(var r=0;r<(l-1);r++){ //loop through each subsequent row of the triangle
+
+                if(r==0){
+                    var p = 1;
+                } else {
+                    p = Math.pow(2,r)// r1 -> 2, r2 -> 4, r3 -> 8, r4-> 16, etc
+                }
+                
+                for(var i=0; i<p;i++){ //loop through paths per row
+
+                    new_path = paths[i].slice(); 
+                    paths.push(new_path); //create new paths from existing paths              
+                }
+                whats_the_next_point(); // add new points to your paths
+
+            }
+            // You now have an array of arrays for each valid path through the triangle
+            // console.log(paths);
+
+            get_paths_in_triangle();
+            
+        };
+
+        function whats_the_next_point(){ // same as last point or +1
+
+            for(var i=0;i<paths.length;i++){
+
+                if(i<paths.length/2){
+                    var new_point = paths[i][paths[i].length-1];
+                } else {
+                    var new_point = paths[i][paths[i].length-1]+1;
+                }
+                paths[i].push(new_point);
+            }
+        };
+
+        function get_paths_in_triangle(){
+
+            paths_in_triangle = [];
+            
+            for(var i=0;i<paths.length;i++){
+                paths_in_triangle.push(
+                    get_this_t_path(paths[i])
+                );
+            }
+            // You now have an array of arrays with valid values from the triangle array
+            // console.log(paths_in_triangle);
+
+            sum_paths_in_triangle();
+        };
+
+        function get_this_t_path(p){
+            
+            var this_path_in_triangle = [];
+
+            for(var i=0;i<p.length;i++){
+                this_path_in_triangle.push(
+                    t[i][p[i]]
+                );
+                
+            }
+            return this_path_in_triangle;
+        };
+
+        function sum_paths_in_triangle(){
+
+            summed = [];
+
+            for(var i=0;i<paths_in_triangle.length;i++){
+                summed.push(
+                    sum_this(paths_in_triangle[i])
+                )
+            }
+            // You now have an array with the sum of the values from each array in paths_in_triangle
+            // console.log(summed)
+            show_result();
+
+        };
+
+        function sum_this(a){ // returns the value for the sum of the contents of an array
+            var sum = 0
+            for (var i = 0; i < a.length; i++) {
+                sum += a[i];
+            }
+            return sum;
+        };
+
+        function show_result(){
+
+            cheapest_path = Math.min.apply(null, summed);
+            
+            console.log("The cheapest path through this triangle is: " + cheapest_path);
+
+            for (var i = 0; i < paths_in_triangle.length; i++) {
+                  if(summed[i]==cheapest_path) {
+                        console.log(paths_in_triangle[i]);
+                  }
+            }
+
+        }
+
+        init();
+
+        </script>
+    </body>
+</html>
