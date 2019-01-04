@@ -1,5 +1,6 @@
    /*
         Navigate to directory 
+        Install node.
         type 'node kata2.js AAAA BBBBB ABABABAB BABABA AAABBB'
         (Sample Input)
         
